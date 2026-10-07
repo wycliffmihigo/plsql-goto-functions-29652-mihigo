@@ -1,7 +1,9 @@
 # PL/SQL GOTO Statements and Functions: Payroll System
 
 **Course:** Database Development with PL/SQL (INSY 8311)
+
 **Student:** MIHIGO WYCLIFF | **ID:** 29652
+
 **Assignment:** Individual Assignment III
 
 ## Project Idea
