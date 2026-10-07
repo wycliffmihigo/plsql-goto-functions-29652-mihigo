@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION fn_calculate_tax (
 IS
   v_tax NUMBER;
 BEGIN
+  
   IF p_monthly_salary IS NULL OR p_monthly_salary < 0 THEN
     RAISE_APPLICATION_ERROR(-20001, 'Salary must be a non-negative number.');
   END IF;
