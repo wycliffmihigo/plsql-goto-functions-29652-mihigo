@@ -1,0 +1,45 @@
+SET SERVEROUTPUT ON;
+
+DECLARE
+  PROCEDURE check_eq(p_name VARCHAR2, p_actual VARCHAR2, p_expected VARCHAR2) IS
+  BEGIN
+    IF (p_actual = p_expected) OR (p_actual IS NULL AND p_expected IS NULL) THEN
+      DBMS_OUTPUT.PUT_LINE('PASS  ' || p_name);
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('FAIL  ' || p_name || ' (got ' || NVL(p_actual,'NULL') ||
+                           ', expected ' || NVL(p_expected,'NULL') || ')');
+    END IF;
+  END;
+BEGIN
+  check_eq('B1 emp 1 annual',     TO_CHAR(fn_annual_salary(1)),  '10200000');
+  check_eq('B1 emp 7 annual',     TO_CHAR(fn_annual_salary(7)),  '660000');
+  check_eq('B1 unknown employee', TO_CHAR(fn_annual_salary(99)), NULL);
+
+  check_eq('B2 emp 8 (hired 2017-06-30)', TO_CHAR(fn_years_of_service(8)),
+           TO_CHAR(TRUNC(MONTHS_BETWEEN(SYSDATE, DATE '2017-06-30')/12)));
+  check_eq('B2 unknown employee', TO_CHAR(fn_years_of_service(99)), NULL);
+
+  check_eq('B3 salary 0',      TO_CHAR(fn_calculate_tax(0)),      '0');
+  check_eq('B3 salary 60000',  TO_CHAR(fn_calculate_tax(60000)),  '0');
+  check_eq('B3 salary 90000',  TO_CHAR(fn_calculate_tax(90000)),  '3000');
+  check_eq('B3 salary 100000', TO_CHAR(fn_calculate_tax(100000)), '4000');
+  check_eq('B3 salary 180000', TO_CHAR(fn_calculate_tax(180000)), '20000');
+  check_eq('B3 salary 200000', TO_CHAR(fn_calculate_tax(200000)), '24000');
+  check_eq('B3 salary 850000', TO_CHAR(fn_calculate_tax(850000)), '219000');
+
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE('FAIL  B3 negative salary (no error raised) ' || fn_calculate_tax(-5));
+  EXCEPTION
+    WHEN OTHERS THEN
+      IF SQLCODE = -20001 THEN
+        DBMS_OUTPUT.PUT_LINE('PASS  B3 negative salary raises ORA-20001');
+      ELSE
+        DBMS_OUTPUT.PUT_LINE('FAIL  B3 negative salary, wrong error: ' || SQLERRM);
+      END IF;
+  END;
+
+  check_eq('B4 dept 10',      fn_dept_name(10),  'Information Technology');
+  check_eq('B4 dept 30',      fn_dept_name(30),  'Human Resources');
+  check_eq('B4 unknown dept', fn_dept_name(999), 'Unknown Department');
+END;
+/
