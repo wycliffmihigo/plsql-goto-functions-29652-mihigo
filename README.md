@@ -58,5 +58,4 @@ years of service, monthly PAYE tax and department names, and validate payroll re
 
 ## Notes
 - Tested on Oracle Database in SQL Developer, using a dedicated schema `payroll_user`.
-- AI usage: I used an AI assistant (Claude) to help plan the project scenario, draft the SQL code and guide me
-  through setup. I ran and tested all code myself and I can explain each part.
+
