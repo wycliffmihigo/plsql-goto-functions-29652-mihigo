@@ -10,6 +10,7 @@ BEGIN
 END;
 /
 
+
 CREATE TABLE departments (
   dept_id    NUMBER(4)     PRIMARY KEY,
   dept_name  VARCHAR2(50)  NOT NULL,
